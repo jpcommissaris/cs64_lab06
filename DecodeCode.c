@@ -1,5 +1,5 @@
 #include "DecodeCode.h"
-
+#include <stdio.h>
 // Julian Commissaris && Rick Han 
 
 
@@ -10,10 +10,12 @@ mipsinstruction decode(int value)
 	// TODO: fill in the fields
 	instr.funct = value & 0x3F;
 	instr.immediate = ((value & 0xFFFF) << 16) >> 16;
-	instr.rd = (value & 0x1F) >> 11;
-	instr.rt = (value & 0x1F) >> 16;
-	instr.rs = (value & 0x1F) >> 21;
-	instr.opcode = (value & 0x2F) >> 26;
+	instr.rd = (value >> 11) & 0x1F;
+	instr.rt = (value >> 16) & 0x1F;
+	instr.rs = (value >> 21) & 0x1F;
+	instr.opcode = (value >> 26) & 0x3F;
+
+	//printf("%d, %d, %d, %d, %d, %d\n", instr.funct, instr.immediate, instr.rd, instr.rt, instr.rs, instr.opcode);
 
 	return instr;
 }
