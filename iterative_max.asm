@@ -117,5 +117,65 @@ Exit:
 IterativeMax:
     #TODO: write your code here, $a0 stores the address of the array, $a1 stores the length of the array
 
+    #stack
+    addiu $sp, $sp, -20  # saves 2 registers
+    sw $ra, 16($sp)
+    sw $s3, 12($sp)
+    sw $s2, 8($sp)
+    sw $s1, 4($sp)
+    sw $s0, 0($sp)
+
+    la $s0, 0($a0)   # saves address of array
+	move $s1, $a1    # saves value of length
+	li $s2, 0        # increment
+    
+    # move first element into register for max 
+    lw $t0, 0($s0)
+    move $s3, $t0   # max
+    
+
+loop:
+
+	#break loop if length
+	beq $s1, $s2, exit_loop
+	addiu $s2, $s2, 1  # increment
+
+    lw $t0, 0($s0)
+
+    bgt $s3, $t0, smaller
+    move $s3, $t0
+
+    smaller:
+	# print
+	li $v0, 1
+    move $a0, $t0
+    syscall
+    li $v0, 4
+    la $a0, newline
+    syscall
+    li $v0, 1
+    move $a0, $s3
+    syscall
+
+
+    jal ConventionCheck
+
+    # increment pointer by 1
+	addiu $s0, $s0, 4
+
+	j loop
+
+
+exit_loop:
+
+    # pop from stack 
+    lw $s0, 0($sp)
+    lw $s1, 4($sp)
+    lw $s2, 8($sp)
+    lw $s3, 12($sp)
+    lw $ra, 16($sp)
+    addiu $sp, $sp, 20  # restores 2 registers
+
+
     # Do not remove this line
     jr      $ra
