@@ -116,6 +116,53 @@ Exit:
 
 PrintReverse:
     #TODO: write your code here, $a0 stores the address of the array, $a1 stores the length of the array
+    
+    #stack
+    addiu $sp, $sp, -16  # saves 2 registers
+    sw $ra, 12($sp)
+    sw $s2, 8($sp)
+    sw $s1, 4($sp)
+    sw $s0, 0($sp)
+
+    la $s0, 0($a0)   # saves address of array
+	move $s1, $a1    # saves value of length
+	li $s2, 0        # increment
+
+    # move pointer to end of array
+    sll $t0, $s1, 2
+    addu, $s0, $t0, $s0
+    
+
+loop:
+
+	#break loop if length
+	beq $s1, $s2, exit_loop
+	addiu $s2, $s2, 1  # increment
+
+    # increment pointer by 1
+	addiu $s0, $s0, -4
+
+	# print
+	lw $t0, 0($s0)
+	li $v0, 1
+    move $a0, $t0
+    syscall
+
+    
+
+    jal ConventionCheck
+
+	j loop
+
+
+exit_loop:
+
+    # pop from stack 
+    lw $s0, 0($sp)
+    lw $s1, 4($sp)
+    lw $s2, 8($sp)
+    lw $ra, 12($sp)
+    addiu $sp, $sp, 16  # restores 2 registers
 
     # Do not remove this line
     jr      $ra
